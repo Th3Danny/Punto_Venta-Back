@@ -9,5 +9,4 @@ public class PointSaleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PointSaleApplication.class, args);
 	}
-
 }

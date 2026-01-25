@@ -1,42 +1,28 @@
 package com.punto_venta.web.dtos.response;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 public class CreateUserResponse {
+
+    @NotBlank
     private Long id;
+
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
     private String name;
 
-    public CreateUserResponse(Long id, String email, String name) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-    }
+    @NotBlank
+    private String userName;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
+
