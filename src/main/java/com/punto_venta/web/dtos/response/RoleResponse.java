@@ -3,15 +3,9 @@ package com.punto_venta.web.dtos.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
-public class CreateUserResponse {
+public class RoleResponse {
     private Long id;
-    private String email;
     private String name;
-    private String userName;
-    private Set<RoleResponse> roles;
 }
-
