@@ -1,24 +1,26 @@
 package com.punto_venta.persistance.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table (name = "products")
+@Table(name = "products")
+@Data
 public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String name;
 
-    private String descripcion;
-
-    @Column(nullable = false)
-    private BigDecimal precio;
+    private String description;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private boolean active = true;
 }
