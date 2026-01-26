@@ -43,8 +43,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/sales").hasAnyRole("ADMIN","MANAGER","CASHIER")
                     .requestMatchers(HttpMethod.GET, "/sales", "/sales/**").hasAnyRole("ADMIN","MANAGER")
 
-                    // Reportes gerenciales
-                    .requestMatchers("/reports/**").hasAnyRole("ADMIN","MANAGER")
+                    // Reportes gerenciales (under /sales/reports)
+                    .requestMatchers("/sales/reports/**").hasAnyRole("ADMIN","MANAGER")
 
                     .anyRequest().authenticated()
                 );

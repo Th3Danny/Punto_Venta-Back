@@ -1,10 +1,10 @@
 package com.punto_venta.services.impl;
 
+import com.punto_venta.persistance.entities.Roles;
 import com.punto_venta.persistance.entities.Users;
 import com.punto_venta.persistance.repositories.IUserRepository;
 import com.punto_venta.persistance.repositories.IRoleRepository;
 import com.punto_venta.services.IAuthService;
-import com.punto_venta.services.IUserService;
 import com.punto_venta.types.JWTType;
 import com.punto_venta.utils.IJWTUtils;
 import com.punto_venta.web.dtos.request.AuthenticateRequest;
@@ -16,25 +16,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements IAuthService {
-    private final IUserService userService;
     private final IUserRepository iUserRepository;
     private final IRoleRepository iRoleRepository;
     private final IJWTUtils ijwtUtils;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    public AuthServiceImpl (IUserService userService, IJWTUtils ijwtUtils, IUserRepository iUserRepository, IRoleRepository iRoleRepository){
-        this.userService = userService;
+
+    public AuthServiceImpl (IJWTUtils ijwtUtils, IUserRepository iUserRepository, IRoleRepository iRoleRepository){
         this.ijwtUtils = ijwtUtils;
         this.iUserRepository = iUserRepository;
         this.iRoleRepository = iRoleRepository;
@@ -55,23 +49,21 @@ public class AuthServiceImpl implements IAuthService {
         //crear claims (incluye roles)
         // asegurar carga e inspección de roles
         var rolesSet = users.getRoles();
-        log.info("Authenticating user id={} email={} rolesEntityCount={}", users.getId(), users.getEmail(), rolesSet == null ? 0 : rolesSet.size());
 
-        java.util.List<String> roleNames = rolesSet == null ? new java.util.ArrayList<>() : rolesSet.stream().map(r -> r.getName()).collect(Collectors.toList());
-        log.debug("Role names for user {}: {}", users.getEmail(), roleNames);
+
+        java.util.List<String> roleNames = rolesSet == null ? new java.util.ArrayList<>() : rolesSet.stream().map(Roles::getName).collect(Collectors.toList());
+
 
         // fallback: if entity collection is empty, try native query to read role_ids and load Roles
         if (roleNames.isEmpty()) {
-            try {
+
                 java.util.List<Long> roleIds = iUserRepository.findRoleIdsByUserEmail(users.getEmail());
                 if (roleIds != null && !roleIds.isEmpty()) {
                     var rolesFromDb = iRoleRepository.findAllById(roleIds);
-                    roleNames = rolesFromDb.stream().map(r -> r.getName()).collect(Collectors.toList());
-                    log.info("Fallback: loaded {} roles via native query for user {}", roleNames.size(), users.getEmail());
+                    roleNames = rolesFromDb.stream().map(Roles::getName).collect(Collectors.toList());
+
                 }
-            } catch (Exception ex) {
-                log.warn("Fallback native role-load failed for user {}: {}", users.getEmail(), ex.getMessage());
-            }
+
         }
 
         if (roleNames.isEmpty()) {
@@ -81,7 +73,7 @@ public class AuthServiceImpl implements IAuthService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", users.getId());
         claims.put("email", users.getEmail());
-        claims.put("roles", roleNames.stream().map(r -> r.toUpperCase()).collect(Collectors.toList()));
+        claims.put("roles", roleNames.stream().map(String::toUpperCase).collect(Collectors.toList()));
 
         // Generar tokens
         String accessToken = ijwtUtils.generateToken(users.getEmail(), claims, JWTType.ACCESS_TOKEN);
@@ -120,19 +112,15 @@ public class AuthServiceImpl implements IAuthService {
                     .orElseThrow(InvalidCredentialsException::new);
 
                 var rolesSet = users.getRoles();
-                java.util.List<String> roleNames = rolesSet == null ? new java.util.ArrayList<>() : rolesSet.stream().map(r -> r.getName()).collect(Collectors.toList());
+                java.util.List<String> roleNames = rolesSet == null ? new java.util.ArrayList<>() : rolesSet.stream().map(Roles::getName).collect(Collectors.toList());
 
                 if (roleNames.isEmpty()) {
-                    try {
                         java.util.List<Long> roleIds = iUserRepository.findRoleIdsByUserEmail(users.getEmail());
                         if (roleIds != null && !roleIds.isEmpty()) {
                             var rolesFromDb = iRoleRepository.findAllById(roleIds);
-                            roleNames = rolesFromDb.stream().map(r -> r.getName()).collect(Collectors.toList());
-                            log.info("Fallback: loaded {} roles via native query for refresh for user {}", roleNames.size(), users.getEmail());
+                            roleNames = rolesFromDb.stream().map(Roles::getName).collect(Collectors.toList());
+
                         }
-                    } catch (Exception ex) {
-                        log.warn("Fallback native role-load failed during refresh for user {}: {}", users.getEmail(), ex.getMessage());
-                    }
                 }
 
                 if (roleNames.isEmpty()) {
@@ -141,7 +129,7 @@ public class AuthServiceImpl implements IAuthService {
                 Map<String, Object> newClaims = new HashMap<>();
                 newClaims.put("id", users.getId());
                 newClaims.put("email", users.getEmail());
-                newClaims.put("roles", roleNames.stream().map(r -> r.toUpperCase()).collect(Collectors.toList()));
+                newClaims.put("roles", roleNames.stream().map(String::toUpperCase).collect(Collectors.toList()));
 
                 // Generar nuevos tokens
                 String accessToken = ijwtUtils.generateToken(email, newClaims, JWTType.ACCESS_TOKEN);
