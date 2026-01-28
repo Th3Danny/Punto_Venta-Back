@@ -1,6 +1,7 @@
 package com.punto_venta.persistance.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table (name = "sales")
+@Data
 public class Sales {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +23,5 @@ public class Sales {
     private BigDecimal total;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
-    private List<SalesDetail> detalles;
+    private List<SalesDetail> details;
 }
