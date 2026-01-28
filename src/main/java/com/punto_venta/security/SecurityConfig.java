@@ -35,8 +35,8 @@ public class SecurityConfig {
 
                     // Productos
                     .requestMatchers(HttpMethod.GET, "/products", "/products/**").hasAnyRole("ADMIN","CASHIER","MANAGER")
-                    .requestMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN","MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyRole("ADMIN","MANAGER")
+                    .requestMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN","MANAGER", "GERENTE")
+                    .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyRole("ADMIN","MANAGER", "GERENTE")
                     .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
                     // Ventas
@@ -44,7 +44,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/sales", "/sales/**").hasAnyRole("ADMIN","MANAGER")
 
                     // Reportes gerenciales (under /sales/reports)
-                    .requestMatchers("/sales/reports/**").hasAnyRole("ADMIN","MANAGER")
+                    .requestMatchers(HttpMethod.GET,"/sales/reports/**").hasAnyRole("ADMIN","MANAGER", "GERENTE")
 
                     .anyRequest().authenticated()
                 );
@@ -57,7 +57,7 @@ public class SecurityConfig {
 
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:17913"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type"));
         configuration.setAllowCredentials(true);

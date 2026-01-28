@@ -22,5 +22,8 @@ public class Products {
     private BigDecimal price;
 
     @Column(nullable = false)
+    private Integer stock = 0;
+
+    @Column(nullable = false)
     private boolean active = true;
 }

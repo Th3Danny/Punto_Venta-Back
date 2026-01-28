@@ -22,5 +22,14 @@ public class SalesDetail {
     private Products product;
 
     private int amount;
+
     private BigDecimal unitPrice;
+
+    private BigDecimal subTotal;
+
+    private BigDecimal iva;
+
+
+
+
 }
