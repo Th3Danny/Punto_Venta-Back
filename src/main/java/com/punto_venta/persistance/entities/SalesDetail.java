@@ -1,11 +1,13 @@
 package com.punto_venta.persistance.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "sales_detail")
+@Data
 public class SalesDetail {
 
     @Id
@@ -20,5 +22,14 @@ public class SalesDetail {
     private Products product;
 
     private int amount;
+
     private BigDecimal unitPrice;
+
+    private BigDecimal subTotal;
+
+    private BigDecimal iva;
+
+
+
+
 }
