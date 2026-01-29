@@ -168,6 +168,18 @@ public class UserServiceImpl implements IUserService {
                 .build();
     }
 
+    @Override
+    public BaseResponse getAllRoles() {
+        return BaseResponse.builder()
+                .data(iRoleRepository.findAll().stream()
+                        .map(r -> new RoleResponse(r.getId(), r.getName()))
+                        .collect(Collectors.toList()))
+                .message("Roles obtenidos correctamente")
+                .success(true)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
     private UserResponse mapToUserResponse(Users user) {
         Set<RoleResponse> roleResponses = user.getRoles().stream()
                 .map(r -> new RoleResponse(r.getId(), r.getName()))

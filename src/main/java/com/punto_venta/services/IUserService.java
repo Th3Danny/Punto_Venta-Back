@@ -15,6 +15,7 @@ public interface IUserService {
     BaseResponse getUserByEmail(String email);
     BaseResponse updateUser(Long id, UpdateUserRequest request);
     BaseResponse deleteUser(Long id);
+    BaseResponse getAllRoles();
 
     Optional<Users> getOptionalUserEmail(String email);
 }

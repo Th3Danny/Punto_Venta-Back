@@ -53,4 +53,10 @@ public class UserController {
         BaseResponse baseResponse = userService.deleteUser(id);
         return baseResponse.buildResponseEntity();
     }
+
+    @GetMapping("/roles")
+    public ResponseEntity<BaseResponse> getRoles() {
+        BaseResponse baseResponse = userService.getAllRoles();
+        return baseResponse.buildResponseEntity();
+    }
 }

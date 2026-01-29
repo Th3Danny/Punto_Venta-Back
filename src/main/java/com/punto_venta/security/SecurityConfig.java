@@ -49,6 +49,8 @@ public class SecurityConfig {
                     // Reportes gerenciales (under /sales/reports)
                     .requestMatchers(HttpMethod.GET,"/sales/reports/**").hasAnyRole("ADMIN","MANAGER", "GERENTE")
 
+                    .requestMatchers(HttpMethod.GET, "/users/roles").hasAnyRole("ADMIN")
+
                     .anyRequest().authenticated()
                 );
 
