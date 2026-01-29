@@ -33,11 +33,14 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/auth/authenticate").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
 
+                    .requestMatchers(HttpMethod.GET, "/products", "/products/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN")
                     // Productos
                     .requestMatchers(HttpMethod.GET, "/products", "/products/**").hasAnyRole("ADMIN","CASHIER","MANAGER")
                     .requestMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN","MANAGER", "GERENTE")
                     .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyRole("ADMIN","MANAGER", "GERENTE")
-                    .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/products/**").hasAnyRole("ADMIN")
 
                     // Ventas
                     .requestMatchers(HttpMethod.POST, "/sales").hasAnyRole("ADMIN","MANAGER","CASHIER")
