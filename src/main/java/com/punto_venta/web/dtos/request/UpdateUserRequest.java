@@ -8,10 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
-
 @Data
 @NoArgsConstructor
-public class CreateUserRequest {
+public class UpdateUserRequest {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 40, message = "El nombre no puede exceder 40 caracteres")
@@ -29,7 +28,4 @@ public class CreateUserRequest {
     @NotEmpty(message = "Debe asignarse al menos un rol")
     private Set<Long> roleIds;
 
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, max = 40, message = "La contraseña debe tener entre 6 y 40 caracteres")
-    private String password;
 }
