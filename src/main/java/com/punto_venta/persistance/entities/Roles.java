@@ -3,6 +3,8 @@ package com.punto_venta.persistance.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -18,5 +20,7 @@ public class Roles {
     private String name; // ADMIN, CAJERO, GERENTE
 
     @ManyToMany(mappedBy = "roles")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Users> users;
 }

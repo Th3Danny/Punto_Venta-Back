@@ -2,6 +2,8 @@ package com.punto_venta.persistance.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 
 import java.util.Set;
@@ -33,5 +35,7 @@ public class Users {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Roles> roles;
 }
